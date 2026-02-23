@@ -10,11 +10,11 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-       COPY "DGNCUS.SEL".
+       COPY "COPY\DGNCUS.SEL".
 
        DATA DIVISION.
        FILE SECTION.
-       COPY "DGNCUS.FD".
+       COPY "COPY\DGNCUS.FD".
 
        WORKING-STORAGE SECTION.
 
@@ -22,7 +22,7 @@
        77  WS-FIM          PIC X VALUE 'N'.
        
        *>   DEFAULT VARIABLES TO BE USED ALL PROGRAMS 
-       COPY "PGMWORK.WS".
+       COPY "COPY\PGMWORK.WS".
 
        01  WS-SGN001-WORK-VARS.
            05 WS-NEXT-ID           PIC  9(009)     VALUE ZEROS.
@@ -39,7 +39,7 @@
                10  WV-PHONE            PIC  9(009).
            
       *> LINKAGE SECTION COPY
-       COPY "PGMLINK.LK".
+       COPY "COPY\PGMLINK.LK".
 
        SCREEN SECTION.
        01  SC-SCREEN-01.
@@ -68,7 +68,7 @@
        PROCEDURE DIVISION USING LK-PARAMETERS.
        DECLARATIVES.
 
-       COPY "DGNCUS.DEC".
+       COPY "COPY\DGNCUS.DEC".
 
        END DECLARATIVES.
 

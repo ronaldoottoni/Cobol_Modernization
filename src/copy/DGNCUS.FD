@@ -1,0 +1,20 @@
+      *----------------------------------------------------------------*
+      *    FILE....: DGNCUS.DAT
+      *    CONTENT.: CUSTUMER DATAS
+      *    TYPE....: INDEXED
+      *    LENGTH..: 512 (032, 480)
+      *    RT......: RECORD TYPE
+      *              00 - MAIN DATA
+      *----------------------------------------------------------------* 
+       FD  DGNCUS.
+       01  DGNCUS-REG.                                                  *> 512
+           05  DGNCUS-KEY.                                              *> 032
+               10  DGNCUS-ID                       PIC  9(009).
+               10  DGNCUS-RT                       PIC  X(002).
+               10  DGNCUS-KEY-FILLER               PIC  X(021).
+           05  DGNCUS-BODY.                                             *> 480
+               10  DGNCUS-NAME                     PIC  X(060).
+               10  DGNCUS-DOCUMENT                 PIC  X(025).
+               10  DGNCUS-EMAIL                    PIC  X(150).
+               10  DGNCUS-PHONE                    PIC  9(009).
+               10  DGNCUS-FILLER                   PIC  X(236).

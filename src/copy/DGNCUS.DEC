@@ -1,0 +1,29 @@
+       000-DGNCUS-HANDLING SECTION.
+           USE AFTER STANDARD ERROR PROCEDURE ON DGNCUS.
+       
+       000-DGNCUS-ERROR.
+           EVALUATE WS-STATUS
+               WHEN "22"
+                   DISPLAY "DUPLICATED KEY"
+                   GO 000-DGNCUS-EXIT
+               WHEN "23"
+                   DISPLAY "RECORD NOT FOUND"
+                   GO 000-DGNCUS-EXIT
+               WHEN "35"
+                   OPEN OUTPUT DGNCUS
+                   CLOSE DGNCUS
+                   OPEN I-O DGNCUS
+                   GO 000-DGNCUS-EXIT
+               WHEN "39"
+                   DISPLAY "BROKED FILE - 39: " WS-DGNCUS
+               WHEN "98"
+                   DISPLAY "FILE IN USE BY ANOTHER PROCESS"
+               WHEN OTHER
+                   DISPLAY "I/O ERROR - FILE STATUS: "
+                           WS-STATUS
+           END-EVALUATE
+       
+           MOVE "S" TO WS-ERRO-IO.
+
+       000-DGNCUS-EXIT.
+           EXIT.

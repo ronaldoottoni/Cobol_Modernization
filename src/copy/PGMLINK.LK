@@ -1,0 +1,52 @@
+      *----------------------------------------------------------------*
+      * DEFAULT LINKAGE TO BE USED WHEN CALL OTHER PROGRAMS            *
+      * LENGTH....: 200                                                *
+      *    >>> THIS IS A COPY FROM PGMLINK.WS (USED BY MAIN PROGRAM)   *
+      *    >>> IF CHANGE SOMETHING HERE, MUST BE CHANGED INPGMLINK.WS  *
+      *    >>> IF CHANGE SOMETHING HERE, MUST BE CHANGED INPGMLINK.WW  *
+      * ---------------------------------------------------------------*
+      * LK-FLAG-WEB.....: TO IDENTIFY IF THE EXECUTION IS BY WEB/PROMPT*
+      *    S - WEB EXECUTION                                           *
+      *    N - PROMPT EXECUTION                                        *
+      *                                                                *
+      * LK-CALL-WEB.....: TO IDENTIFY IF THE PROGRAM IS CALLED BY      *
+      *                   ANOTHER PROGRAM RUNNING IN WEB MODE          *
+      *    S - YES, IT'S CALLED BY A PROGRAM RUNNING IN WEB MODE       *
+      *    N - NO, IT'S CALLED BY A PROGRAM RUNNING IN PROMPT MODE     *
+      *                                                                *
+      * LK-TTY..........: WHEN WEB MODE, GET THE TTY FROM THE BROWSER  *
+      * LK-PID..........: GET THE LINUX PROCESS IN EXECUTION (PID)     *
+      * LK-GROUP........: THE NAME TO REFER THE COMPANY IN GENERAL     *
+      * LK-GRUPO-REF....: THE MAIN GROUP/HOLDER NAME (IF EXIST)        *
+      * LK-COMPANY......: THE COMPANY'S CODE IN THE SYSTEM             *
+      * LK-BRANCH.......: THE BRANCH OFFICE'S CODE IN THE SYSTEM       *
+      * LK-USERNAME.....: THE LOGIN USED THE GET IN THE SYSTEM         *
+      * LK-CALL-PROGRAM.: THE NAME OF THE PROGRAM CALLED               *
+      * LK-CALL-DATE....: THE DATE OF THE CALL                         *
+      * LK-CALL-TIME....: THE TIME OF THE CALL                         *
+      * LK-MENU-APP.....: THE ABREVIATION OF THE MODULE (SGN,SFI, SAG) *
+      * LK-MENU-GROUP...: THE CODE OF THE MENU (1,2,3,4)               *
+      * LK-MENU-OPTION..: THE MENU OPTION (REFER TO THE PROGRAM)       *
+      * LK-INT-ACCESS...: IDENTIFY IF THE ACCESS LAN OR WAN            *
+      *----------------------------------------------------------------* 
+       LINKAGE SECTION.
+
+       01  LK-PARAMETERS.	
+           05  LK-FLAG-WEB              PIC  X(001).
+           05  LK-CALL-WEB              PIC  X(001).
+           05  LK-TTY                   PIC  X(010).
+           05  LK-PID                   PIC  9(005).
+           05  LK-GROUP                 PIC  X(010).
+           05  LK-GROUP-REF             PIC  X(010).
+           05  LK-COMPANY               PIC  9(003).
+           05  LK-BRANCH                PIC  9(003).
+           05  LK-USERNAME              PIC  X(010).
+           05  LK-CALL-PROGRAM          PIC  X(006).
+           05  LK-CALL-DATE             PIC  9(008).
+           05  LK-CALL-TIME             PIC  9(008).
+           05  LK-MENU-APP              PIC  X(003).
+           05  LK-MENU-GROUP            PIC  9(002).
+           05  LK-MENU-OPTION           PIC  9(002). 
+           05  LK-INT-ACCESS            PIC  X(001).
+           05  LK-FILLER                PIC  X(117).
+            

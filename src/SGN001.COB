@@ -119,7 +119,7 @@
       *     STRING WS-DATA-PATH DELIMITED BY "  "
       *           "DGNCUS" DELIMITED BY SIZE INTO WS-DGNCUS
            
-           MOVE "..\data\DGNCUS" TO WS-DGNCUS
+           MOVE "DGNCUS" TO WS-DGNCUS
            
            OPEN I-O DGNCUS
            .

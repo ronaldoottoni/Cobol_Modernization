@@ -26,7 +26,7 @@
 
        01  WS-SGN001-WORK-VARS.
            05 WS-NEXT-ID           PIC  9(009)     VALUE ZEROS.
-           
+           05 WS-RETORNO           PIC  X(500)     VALUE SPACES.
 
        01  WV-SCREEN.
            05  WV-DATA-01.
@@ -114,11 +114,6 @@
            MOVE FUNCTION CURRENT-DATE   TO WS-DATA-HORA-SYS.
 
        040-OPEN-FILES.
-      *     DISPLAY "COB_DATA_DIR"      UPON ENVIRONMENT-NAME
-      *     ACCEPT WS-DATA-PATH         FROM ENVIRONMENT-VALUE
-      *     STRING WS-DATA-PATH DELIMITED BY "  "
-      *           "DGNCUS" DELIMITED BY SIZE INTO WS-DGNCUS
-           
            MOVE "DGNCUS" TO WS-DGNCUS
            
            OPEN I-O DGNCUS
@@ -321,8 +316,6 @@
            .
 
        990-END-PROGRAM.
-           EXIT PROGRAM
-      *     STOP RUN
-           .
+           EXIT PROGRAM.
 
        END PROGRAM SGN001.

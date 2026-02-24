@@ -12,6 +12,7 @@
        
        01  WS-PROGWEB-WORK-VARS.
            05  FILLER              PIC  X(001)     VALUE SPACES.
+           05  WS-MENSAGEM         PIC  X(200)     VALUE SPACES.
        
        01  WK-PARAMETERS-WEB.
            05  WK-PROGRAMA         PIC  X(010)     VALUE SPACES.
@@ -25,9 +26,16 @@
            DISPLAY "PARAMETERS"        UPON ENVIRONMENT-NAME
            ACCEPT WK-PARAMETERS-WEB    FROM ENVIRONMENT-VALUE
 
-           MOVE WK-PARAMETERS(1:200)   TO LK-PARAMETERS
+           STRING "COBOL LEU " DELIMITED BY SIZE
+                  WK-PARAMETERS-WEB DELIMITED BY "  "
+                  "..." DELIMITED BY SIZE
+                  INTO WS-MENSAGEM
 
-           CALL WK-PROGRAMA USING LK-PARAMETERS
+           DISPLAY WS-MENSAGEM UPON CONSOLE.
+                  
+      *     MOVE WK-PARAMETERS(1:200)   TO LK-PARAMETERS
+
+      *     CALL WK-PROGRAMA USING LK-PARAMETERS
 
            STOP RUN
            .

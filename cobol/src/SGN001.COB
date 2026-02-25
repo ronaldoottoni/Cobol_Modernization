@@ -37,6 +37,16 @@
                10  WV-DOCUMENT         PIC  X(025).
                10  WV-EMAIL            PIC  X(150).
                10  WV-PHONE            PIC  9(009).
+
+       01  WW-WEB-SECTION.
+       COPY "COPY\WEBVARS.WW".
+           05  WW-DATA-01.
+               10  WW-ID               PIC  9(009).
+           05  WW-DATA-02
+               10  WW-NAME             PIC  X(060).
+               10  WW-DOCUMENT         PIC  X(025).
+               10  WW-EMAIL            PIC  X(150).
+               10  WW-PHONE            PIC  9(009).
            
       *> LINKAGE SECTION COPY
        COPY "COPY\PGMLINK.LK".
@@ -75,6 +85,9 @@
        000-PROGRAM SECTION.
 
        MAIN-PROCESS.
+           IF LK-FLAG-WEB = "S"
+              GO WEB-000-PARAMETERS
+           END-IF.
            
        010-INITIALIZE-VARS.
            INITIALIZE WS-SGN001-WORK-VARS
@@ -118,6 +131,9 @@
            
            OPEN I-O DGNCUS
            .
+
+       090-EXIT.
+           EXIT.
 
        100-DATA-ENTRY.
            INITIALIZE WV-DATA-01
@@ -317,5 +333,42 @@
 
        990-END-PROGRAM.
            EXIT PROGRAM.
+
+       000-WEB SECTION.
+
+       WEB-000-PARAMETERS.
+           DISPLAY "PARAMETERS"        UPON ENVIRONMENT-NAME
+           ACCEPT WK-PARAMETERS-WEB    FROM ENVIRONMENT-VALUE
+
+           MOVE WK-PARAMETERS          TO LK-PARAMETERS.
+
+       WEB-010-BEGIN.
+           PERFORM 010-INITIALIZE-VARS
+              THRU 090-EXIT.
+
+       WEB-020-SET-VARIABLES.
+           MOVE WW-DATA-01             TO WV-DATA-01.
+           MOVE WW-DATA-02             TO WV-DATA-02.
+
+       WEB-030-CALL-FUNCTIONS.
+           IF WW-FUNCAO = "ACCESS"
+              PERFORM 100-DATA-ENTRY
+                 THRU 190-READ-DGNCUS
+           END-IF.
+
+       WEB-040-SEND-VARIABLES.
+           MOVE LK-PARAMETERS          TO WK-PARAMETERS
+           MOVE WV-DATA-01             TO WW-DATA-01
+           MOVE WV-DATA-02             TO WW-DATA-02
+
+           DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE
+           DISPLAY WW-DATA-01          UPON CONSOLE
+           DISPLAY WW-DATA-02          UPON CONSOLE.
+
+       WEB-090-END.
+           PERFORM 900-CLOSE-FILES
+              THRU 990-END-PROGRAM
+
+           STOP RUN.
 
        END PROGRAM SGN001.

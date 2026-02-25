@@ -47,5 +47,8 @@
            05  LK-MENU-GROUP            PIC  9(002).
            05  LK-MENU-OPTION           PIC  9(002). 
            05  LK-INT-ACCESS            PIC  X(001).
-           05  LK-FILLER                PIC  X(117).
+           05  LK-FUNCTION              PIC  X(040).
+           05  LK-FUNCTION-BACK         PIC  X(040).
+           05  LK-FLAG-FUNCTION         PIC  X(001). 
+           05  LK-FILLER                PIC  X(036).
             

@@ -38,11 +38,12 @@
                10  WV-EMAIL            PIC  X(150).
                10  WV-PHONE            PIC  9(009).
 
-       01  WW-WEB-SECTION.
-       COPY "COPY\WEBVARS.WW".
+      *---- WEB -------------------------------------------------------*
+       COPY "COPY\PGMLINK.WEB".
+         02  WW-WEB-SCREEN.
            05  WW-DATA-01.
                10  WW-ID               PIC  9(009).
-           05  WW-DATA-02
+           05  WW-DATA-02.
                10  WW-NAME             PIC  X(060).
                10  WW-DOCUMENT         PIC  X(025).
                10  WW-EMAIL            PIC  X(150).
@@ -136,6 +137,10 @@
            EXIT.
 
        100-DATA-ENTRY.
+           IF LK-FLAG-WEB = "S" AND 
+              WK-FUNCTION NOT = "START"
+              EXIT PARAGRAPH.
+           
            INITIALIZE WV-DATA-01
                       WV-DATA-02
 
@@ -351,9 +356,12 @@
            MOVE WW-DATA-02             TO WV-DATA-02.
 
        WEB-030-CALL-FUNCTIONS.
-           IF WW-FUNCAO = "ACCESS"
+           IF WK-FUNCTION = "ACCESS"
               PERFORM 100-DATA-ENTRY
                  THRU 190-READ-DGNCUS
+              IF WK-FLAG-FUNCTION = "N"
+                 GO WEB-090-END
+              END-IF
            END-IF.
 
        WEB-040-SEND-VARIABLES.
@@ -361,9 +369,7 @@
            MOVE WV-DATA-01             TO WW-DATA-01
            MOVE WV-DATA-02             TO WW-DATA-02
 
-           DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE
-           DISPLAY WW-DATA-01          UPON CONSOLE
-           DISPLAY WW-DATA-02          UPON CONSOLE.
+           DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE.
 
        WEB-090-END.
            PERFORM 900-CLOSE-FILES

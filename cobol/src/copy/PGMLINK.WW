@@ -47,8 +47,8 @@
            05  WL-MENU-GROUP            PIC  9(002).
            05  WL-MENU-OPTION           PIC  9(002). 
            05  WL-INT-ACCESS            PIC  X(001).
-           05  WL-FUNCTION              PIC  X(040).
-           05  WL-FUNCTION-BACK         PIC  X(040).
+           05  WL-FUNCTION              PIC  X(020).
+           05  WL-FUNCTION-BACK         PIC  X(020).
            05  WL-FLAG-FUNCTION         PIC  X(001). 
-           05  WL-FILLER                PIC  X(036).
+           05  WL-FILLER                PIC  X(076).
             

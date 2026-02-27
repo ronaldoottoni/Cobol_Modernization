@@ -1,23 +1,12 @@
        01  WK-PARAMETERS-WEB.
-       02  FILLER                       PIC  X(010).
+       02  WK-PROGRAM                   PIC  X(010).
        02  WK-PARAMETERS.
            05  WK-FLAG-WEB              PIC  X(001).
-           05  WK-CALL-WEB              PIC  X(001).
            05  WK-TTY                   PIC  X(010).
-           05  WK-PID                   PIC  9(005).
-           05  WK-GROUP                 PIC  X(010).
-           05  WK-GROUP-REF             PIC  X(010).
-           05  WK-COMPANY               PIC  9(003).
-           05  WK-BRANCH                PIC  9(003).
            05  WK-USERNAME              PIC  X(010).
-           05  WK-CALL-PROGRAM          PIC  X(006).
            05  WK-CALL-DATE             PIC  9(008).
            05  WK-CALL-TIME             PIC  9(008).
-           05  WK-MENU-APP              PIC  X(003).
-           05  WK-MENU-GROUP            PIC  9(002).
-           05  WK-MENU-OPTION           PIC  9(002). 
-           05  WK-INT-ACCESS            PIC  X(001).
            05  WK-FUNCTION              PIC  X(020).
            05  WK-FUNCTION-BACK         PIC  X(020).
            05  WK-FLAG-FUNCTION         PIC  X(001). 
-           05  WK-FILLER                PIC  X(076).
+           05  WK-FILLER                PIC  X(122).

@@ -16,7 +16,8 @@
        
        01  WK-PARAMETERS-WEB.
            05  WK-PROGRAM          PIC  X(010)     VALUE SPACES.
-           05  WK-PARAMETERS       PIC  X(40960)   VALUE SPACES.
+           05  WK-PARAMETERS       PIC  X(200)     VALUE SPACES.
+           05  WK-DATA             PIC  X(40760)   VALUE SPACES.
 
       *>   VARIABLES TO PREPAR THE LINKAGE'S CALL
        COPY "copy\PGMLINK.WS".
@@ -26,13 +27,6 @@
            DISPLAY "PARAMETERS"        UPON ENVIRONMENT-NAME
            ACCEPT WK-PARAMETERS-WEB    FROM ENVIRONMENT-VALUE
 
-      *     STRING "COBOL LEU " DELIMITED BY SIZE
-      *            WK-PARAMETERS-WEB DELIMITED BY "  "
-      *            "..." DELIMITED BY SIZE
-      *            INTO WS-MENSAGEM
-
-      *     DISPLAY WS-MENSAGEM UPON CONSOLE.
-                  
            MOVE WK-PARAMETERS(1:200)   TO LK-PARAMETERS
            CALL WK-PROGRAM USING LK-PARAMETERS
 

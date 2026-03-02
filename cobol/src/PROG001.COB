@@ -4,9 +4,9 @@
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
-       SPECIAL-NAMES.
-           DECIMAL-POINT                IS COMMA
-           CRT STATUS                   IS WS-FUNCAO.
+      *> SPECIAL-NAMES.
+      *>     DECIMAL-POINT                IS COMMA
+      *>     CRT STATUS                   IS WS-FUNCAO.
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
@@ -52,29 +52,29 @@
       *> LINKAGE SECTION COPY
        COPY "COPY\PGMLINK.LK".
 
-       SCREEN SECTION.
-       01  SC-SCREEN-01.
-           02  LINE 05  COL 03 "ID........: ".
-           02  LINE 06  COL 01 
-           "..........................................................".
-       01  SC-DATA-01.
-           02  SC-ID   LINE 05 COL 15 PIC  9(009) USING
-               WV-ID.
-
-       01  SC-SCREEN-02.
-           02  LINE 07  COL 03 "NAME......: ".
-           02  LINE 08  COL 03 "DOCUMENT..: ".
-           02  LINE 09  COL 03 "EMAIL.....: ".
-           02  LINE 10  COL 03 "PHONE.....: ".
-       01  SC-DATA-02.
-           02  SC-NAME LINE 07  COL 15  PIC  X(060) USING
-               WV-NAME.
-           02  SC-DOCUMENT LINE 08  COL 15  PIC  X(025) USING
-               WV-DOCUMENT.
-           02  SC-EMAIL LINE 09 COL 15 PIC X(050) USING
-               WV-EMAIL.
-           02  SC-PHONE LINE 10 COL 15 PIC 9(009) USING
-               WV-PHONE.
+      * SCREEN SECTION.
+      * 01  SC-SCREEN-01.
+      *     02  LINE 05  COL 03 "ID........: ".
+      *     02  LINE 06  COL 01 
+      *     "..........................................................".
+      * 01  SC-DATA-01.
+      *     02  SC-ID   LINE 05 COL 15 PIC  9(009) USING
+      *         WV-ID.
+*
+      * 01  SC-SCREEN-02.
+      *     02  LINE 07  COL 03 "NAME......: ".
+      *     02  LINE 08  COL 03 "DOCUMENT..: ".
+      *     02  LINE 09  COL 03 "EMAIL.....: ".
+      *     02  LINE 10  COL 03 "PHONE.....: ".
+      * 01  SC-DATA-02.
+      *     02  SC-NAME LINE 07  COL 15  PIC  X(060) USING
+      *         WV-NAME.
+      *     02  SC-DOCUMENT LINE 08  COL 15  PIC  X(025) USING
+      *         WV-DOCUMENT.
+      *     02  SC-EMAIL LINE 09 COL 15 PIC X(050) USING
+      *         WV-EMAIL.
+      *     02  SC-PHONE LINE 10 COL 15 PIC 9(009) USING
+      *         WV-PHONE.
 
        PROCEDURE DIVISION USING LK-PARAMETERS.
        DECLARATIVES.
@@ -104,25 +104,25 @@
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-           DISPLAY SC-SCREEN-01.
+      *>     DISPLAY SC-SCREEN-01.
        
        021-DISPLAY-DATA-01.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-           DISPLAY SC-DATA-01.
+      *>     DISPLAY SC-DATA-01.
 
        022-DISPLAY-SCREEN-02.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-           DISPLAY SC-SCREEN-02.
+      *>     DISPLAY SC-SCREEN-02.
 
        022-DISPLAY-DATA-02.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-           DISPLAY SC-DATA-02.
+      *     DISPLAY SC-DATA-02.
 
        011-MOUNT-DATE-TIME.
            MOVE FUNCTION CURRENT-DATE   TO WS-DATA-HORA-SYS.
@@ -154,8 +154,8 @@
            INITIALIZE WV-DATA-02
            PERFORM 022-DISPLAY-DATA-02
 
-           ACCEPT SC-ID
-           MOVE FUNCTION NUMVAL(SC-ID) TO WV-ID 
+      *>     ACCEPT SC-ID
+      *>     MOVE FUNCTION NUMVAL(SC-ID) TO WV-ID 
 
            IF WS-PF1
               PERFORM 900-CLOSE-FILES
@@ -193,7 +193,7 @@
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-           ACCEPT SC-NAME.
+      *     ACCEPT SC-NAME.
 
            IF WS-PF1
               GO 110-ID.
@@ -210,14 +210,14 @@
            MOVE FUNCTION UPPER-CASE(WV-NAME)
                                        TO WV-NAME.
 
-           IF LK-FLAG-WEB NOT = "S"
-              DISPLAY SC-NAME.
+      *     IF LK-FLAG-WEB NOT = "S"
+      *        DISPLAY SC-NAME.
  
        210-DOCUMENT.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
            
-           ACCEPT SC-DOCUMENT.
+      *     ACCEPT SC-DOCUMENT.
 
            IF WS-PF1
               GO 210-NAME.
@@ -230,7 +230,7 @@
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-           ACCEPT SC-EMAIL.
+      *     ACCEPT SC-EMAIL.
 
            IF WS-PF1
               GO 210-DOCUMENT.
@@ -242,14 +242,14 @@
            MOVE FUNCTION LOWER-CASE(WV-EMAIL)
                                        TO WV-EMAIL.
 
-           IF LK-FLAG-WEB NOT = "S"
-               DISPLAY SC-EMAIL.
+      *     IF LK-FLAG-WEB NOT = "S"
+      *         DISPLAY SC-EMAIL.
 
        210-PHONE.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-           ACCEPT SC-PHONE.
+      *     ACCEPT SC-PHONE.
 
            IF WS-PF1
               GO 210-EMAIL.
@@ -263,12 +263,12 @@
                EXIT PARAGRAPH.
 
            MOVE "N"                    TO WS-CONFIRM
-           DISPLAY "CONFIRM DATA RECORDING? " LINE 12 COL 01
-           ACCEPT WS-CONFIRM AT LINE 12 COL 25.
+      *     DISPLAY "CONFIRM DATA RECORDING? " LINE 12 COL 01
+      *     ACCEPT WS-CONFIRM AT LINE 12 COL 25.
 
            MOVE FUNCTION UPPER-CASE(WS-CONFIRM)
                                        TO WS-CONFIRM
-           DISPLAY WS-BLANK-LINE LINE 12 COL 01
+      *     DISPLAY WS-BLANK-LINE LINE 12 COL 01
            IF WS-CONFIRM NOT = "S"
                INITIALIZE WV-DATA-01
                           WV-DATA-02
@@ -342,8 +342,7 @@
        000-WEB SECTION.
 
        WEB-000-PARAMETERS.
-           DISPLAY "PARAMETERS"        UPON ENVIRONMENT-NAME
-           ACCEPT WK-PARAMETERS-WEB    FROM ENVIRONMENT-VALUE
+           ACCEPT WK-PARAMETERS-WEB FROM ENVIRONMENT "PARAMETERS"
 
            MOVE WK-PARAMETERS          TO LK-PARAMETERS.
 
@@ -369,7 +368,8 @@
            MOVE WV-DATA-01             TO WW-DATA-01
            MOVE WV-DATA-02             TO WW-DATA-02
 
-           DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE.
+           DISPLAY "CHEGUEI AQUI".
+      *>     DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE.
 
        WEB-090-END.
            PERFORM 900-CLOSE-FILES

@@ -54,7 +54,7 @@ function buildSysParam(params: {
     write(time, 29, 8);
 
     // WK-FUNCTION (posição 38)
-    write(params.functionWeb|| "", 37, 20);
+    write(params.functionWeb || "", 37, 20);
 
     // WK-FUNCTION-BACK (posição 58)
     write("", 57, 20);
@@ -89,6 +89,7 @@ app.post("/api/exec", (req: Request, res: Response) => {
         exePath,
         [],
         {
+            cwd: path.resolve(__dirname, "../../cobol/objects"),
             env: {
                 ...process.env,
                 PARAMETERS: finalParameters,
@@ -96,9 +97,10 @@ app.post("/api/exec", (req: Request, res: Response) => {
         },
         (error, stdout, stderr) => {
             if (error) {
-                console.error("Erro ao executar COBOL:", error);
+                console.error("ERRO COMPLETO:", error);
                 return res.status(500).json({
                     error: "Erro ao executar COBOL",
+                    details: error.message
                 });
             }
 

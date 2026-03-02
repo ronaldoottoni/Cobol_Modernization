@@ -39,9 +39,6 @@
            DISPLAY WS-TITLE
            DISPLAY WS-LINE
            DISPLAY "1 - Customer Registration"
-           DISPLAY "2 - Supplier Registration"
-           DISPLAY "3 - Product Registration"
-           DISPLAY "4 - Reports"
            DISPLAY "9 - Exit"
            DISPLAY WS-LINE
            DISPLAY "Choose an Option: "
@@ -54,14 +51,7 @@
        EXECUTE-OPTION.
            EVALUATE WS-OPTION
                WHEN 1
-                   CALL "SGN001" USING LK-PARAMETERS
-               WHEN 2
-      *>             CALL "PGMPROD"
-                   CALL "TESTESCR"
-               WHEN 3
-                   CALL "PGMFAT"
-               WHEN 4
-                   CALL "PGMREL"
+                   CALL "PROG001" USING LK-PARAMETERS
                WHEN 9
                    MOVE 'S' TO WS-END
                WHEN OTHER

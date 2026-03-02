@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. SGN001.
+       PROGRAM-ID. PROG001.
       *> AUTHOR. OTTONI, RONALDO.
 
        ENVIRONMENT DIVISION.
@@ -24,7 +24,7 @@
        *>   DEFAULT VARIABLES TO BE USED ALL PROGRAMS 
        COPY "COPY\PGMWORK.WS".
 
-       01  WS-SGN001-WORK-VARS.
+       01  WS-PROG001-WORK-VARS.
            05 WS-NEXT-ID           PIC  9(009)     VALUE ZEROS.
            05 WS-RETORNO           PIC  X(500)     VALUE SPACES.
 
@@ -91,7 +91,7 @@
            END-IF.
            
        010-INITIALIZE-VARS.
-           INITIALIZE WS-SGN001-WORK-VARS
+           INITIALIZE WS-PROG001-WORK-VARS
                       WV-DATA-01
                       WV-DATA-02
            .
@@ -377,4 +377,4 @@
 
            STOP RUN.
 
-       END PROGRAM SGN001.
+       END PROGRAM PROG001.

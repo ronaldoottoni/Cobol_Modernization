@@ -33,23 +33,12 @@
 
        01  LK-PARAMETERS.	
            05  LK-FLAG-WEB              PIC  X(001).
-           05  LK-CALL-WEB              PIC  X(001).
            05  LK-TTY                   PIC  X(010).
-           05  LK-PID                   PIC  9(005).
-           05  LK-GROUP                 PIC  X(010).
-           05  LK-GROUP-REF             PIC  X(010).
-           05  LK-COMPANY               PIC  9(003).
-           05  LK-BRANCH                PIC  9(003).
            05  LK-USERNAME              PIC  X(010).
-           05  LK-CALL-PROGRAM          PIC  X(006).
            05  LK-CALL-DATE             PIC  9(008).
            05  LK-CALL-TIME             PIC  9(008).
-           05  LK-MENU-APP              PIC  X(003).
-           05  LK-MENU-GROUP            PIC  9(002).
-           05  LK-MENU-OPTION           PIC  9(002). 
-           05  LK-INT-ACCESS            PIC  X(001).
            05  LK-FUNCTION              PIC  X(020).
            05  LK-FUNCTION-BACK         PIC  X(020).
            05  LK-FLAG-FUNCTION         PIC  X(001). 
-           05  LK-FILLER                PIC  X(076).
+           05  LK-FILLER                PIC  X(122).
             

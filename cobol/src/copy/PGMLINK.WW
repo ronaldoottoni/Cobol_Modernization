@@ -32,23 +32,12 @@
 
        01  WL-WEB-PARAMETERS.	
            05  WL-FLAG-WEB              PIC  X(001).
-           05  WL-CALL-WEB              PIC  X(001).
            05  WL-TTY                   PIC  X(010).
-           05  WL-PID                   PIC  9(005).
-           05  WL-GROUP                 PIC  X(010).
-           05  WL-GROUP-REF             PIC  X(010).
-           05  WL-COMPANY               PIC  9(003).
-           05  WL-BRANCH                PIC  9(003).
            05  WL-USERNAME              PIC  X(010).
-           05  WL-CALL-PROGRAM          PIC  X(006).
            05  WL-CALL-DATE             PIC  9(008).
            05  WL-CALL-TIME             PIC  9(008).
-           05  WL-MENU-APP              PIC  X(003).
-           05  WL-MENU-GROUP            PIC  9(002).
-           05  WL-MENU-OPTION           PIC  9(002). 
-           05  WL-INT-ACCESS            PIC  X(001).
            05  WL-FUNCTION              PIC  X(020).
            05  WL-FUNCTION-BACK         PIC  X(020).
            05  WL-FLAG-FUNCTION         PIC  X(001). 
-           05  WL-FILLER                PIC  X(076).
+           05  WL-FILLER                PIC  X(122).
             

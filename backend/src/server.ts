@@ -8,6 +8,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+/* =========================
+   BUILD SYS PARAM (200)
+========================= */
+
 function buildSysParam(params: {
     flagWeb?: string;
     ttyWeb?: string;
@@ -61,6 +65,8 @@ function buildSysParam(params: {
 
     // WK-FLAG-FUNCTION (posição 78)
     write("", 77, 1);
+
+    return buffer.join("");
 }
 
 app.post("/api/exec", (req: Request, res: Response) => {
@@ -69,7 +75,7 @@ app.post("/api/exec", (req: Request, res: Response) => {
         "../../cobol/objects/PROGWEB.exe"
     );
 
-    const { program, func, sysParams, data } = req.body;
+    const { program, func, data } = req.body;
 
     if (!program || !func) {
         return res.status(400).json({
@@ -79,22 +85,29 @@ app.post("/api/exec", (req: Request, res: Response) => {
 
     // PADRÕES FIXOS
     const programName = program.toUpperCase().padEnd(10, " ");
-    const functionName = func.toUpperCase().padEnd(30, " ");
-    const systemParams = (sysParams || "").padEnd(200, " ");
-
+    const sysParam = buildSysParam({
+        flagWeb: "S",
+        ttyWeb: " ",
+        usernameWeb: "BROW",
+        dateWeb: "",
+        timeWeb: "",
+        functionWeb: func,
+        functionBackWeb: " ",
+        flagFunctionWeb: "S",
+        fillerWeb: " "
+    });
     const finalParameters =
-        programName + functionName + systemParams + (data || "");
+        programName + sysParam + (data || "");
 
     execFile(
-        exePath,
-        [],
-        {
-            cwd: path.resolve(__dirname, "../../cobol/objects"),
-            env: {
-                ...process.env,
-                PARAMETERS: finalParameters,
-            },
+        exePath, [], {
+        maxBuffer: 1024 * 1024 * 10,
+        cwd: path.resolve(__dirname, "../../cobol/objects"),
+        env: {
+            ...process.env,
+            PARAMETERS: finalParameters,
         },
+    },
         (error, stdout, stderr) => {
             if (error) {
                 console.error("ERRO COMPLETO:", error);

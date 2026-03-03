@@ -4,9 +4,9 @@
 
        ENVIRONMENT DIVISION.
        CONFIGURATION SECTION.
-      *> SPECIAL-NAMES.
-      *>     DECIMAL-POINT                IS COMMA
-      *>     CRT STATUS                   IS WS-FUNCAO.
+       SPECIAL-NAMES.
+           DECIMAL-POINT                IS COMMA
+           CRT STATUS                   IS WS-FUNCAO.
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
@@ -52,29 +52,29 @@
       *> LINKAGE SECTION COPY
        COPY "COPY\PGMLINK.LK".
 
-      * SCREEN SECTION.
-      * 01  SC-SCREEN-01.
-      *     02  LINE 05  COL 03 "ID........: ".
-      *     02  LINE 06  COL 01 
-      *     "..........................................................".
-      * 01  SC-DATA-01.
-      *     02  SC-ID   LINE 05 COL 15 PIC  9(009) USING
-      *         WV-ID.
+       SCREEN SECTION.
+       01  SC-SCREEN-01.
+           02  LINE 05  COL 03 "ID........: ".
+           02  LINE 06  COL 01 
+           "..........................................................".
+       01  SC-DATA-01.
+           02  SC-ID   LINE 05 COL 15 PIC  9(009) USING
+               WV-ID.
 *
-      * 01  SC-SCREEN-02.
-      *     02  LINE 07  COL 03 "NAME......: ".
-      *     02  LINE 08  COL 03 "DOCUMENT..: ".
-      *     02  LINE 09  COL 03 "EMAIL.....: ".
-      *     02  LINE 10  COL 03 "PHONE.....: ".
-      * 01  SC-DATA-02.
-      *     02  SC-NAME LINE 07  COL 15  PIC  X(060) USING
-      *         WV-NAME.
-      *     02  SC-DOCUMENT LINE 08  COL 15  PIC  X(025) USING
-      *         WV-DOCUMENT.
-      *     02  SC-EMAIL LINE 09 COL 15 PIC X(050) USING
-      *         WV-EMAIL.
-      *     02  SC-PHONE LINE 10 COL 15 PIC 9(009) USING
-      *         WV-PHONE.
+       01  SC-SCREEN-02.
+           02  LINE 07  COL 03 "NAME......: ".
+           02  LINE 08  COL 03 "DOCUMENT..: ".
+           02  LINE 09  COL 03 "EMAIL.....: ".
+           02  LINE 10  COL 03 "PHONE.....: ".
+       01  SC-DATA-02.
+           02  SC-NAME LINE 07  COL 15  PIC  X(060) USING
+               WV-NAME.
+           02  SC-DOCUMENT LINE 08  COL 15  PIC  X(025) USING
+               WV-DOCUMENT.
+           02  SC-EMAIL LINE 09 COL 15 PIC X(050) USING
+               WV-EMAIL.
+           02  SC-PHONE LINE 10 COL 15 PIC 9(009) USING
+               WV-PHONE.
 
        PROCEDURE DIVISION USING LK-PARAMETERS.
        DECLARATIVES.
@@ -87,6 +87,7 @@
 
        MAIN-PROCESS.
            IF LK-FLAG-WEB = "S"
+              
               GO WEB-000-PARAMETERS
            END-IF.
            
@@ -343,6 +344,7 @@
 
        WEB-000-PARAMETERS.
            ACCEPT WK-PARAMETERS-WEB FROM ENVIRONMENT "PARAMETERS"
+           
 
            MOVE WK-PARAMETERS          TO LK-PARAMETERS.
 
@@ -355,6 +357,10 @@
            MOVE WW-DATA-02             TO WV-DATA-02.
 
        WEB-030-CALL-FUNCTIONS.
+           IF WK-FUNCTION = "TESTAR-CODIGO"
+              PERFORM 111-TEST-ID
+           END-IF
+
            IF WK-FUNCTION = "ACCESS"
               PERFORM 100-DATA-ENTRY
                  THRU 190-READ-DGNCUS
@@ -363,13 +369,13 @@
               END-IF
            END-IF.
 
+
        WEB-040-SEND-VARIABLES.
            MOVE LK-PARAMETERS          TO WK-PARAMETERS
            MOVE WV-DATA-01             TO WW-DATA-01
-           MOVE WV-DATA-02             TO WW-DATA-02
+           MOVE WV-DATA-02             TO WW-DATA-02.
 
-           DISPLAY "CHEGUEI AQUI".
-      *>     DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE.
+           DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE.
 
        WEB-090-END.
            PERFORM 900-CLOSE-FILES

@@ -109,25 +109,25 @@
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-      *>     DISPLAY SC-SCREEN-01.
+           DISPLAY SC-SCREEN-01.
        
        021-DISPLAY-DATA-01.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-      *>     DISPLAY SC-DATA-01.
+           DISPLAY SC-DATA-01.
 
        022-DISPLAY-SCREEN-02.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-      *>     DISPLAY SC-SCREEN-02.
+           DISPLAY SC-SCREEN-02.
 
        022-DISPLAY-DATA-02.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-      *     DISPLAY SC-DATA-02.
+           DISPLAY SC-DATA-02.
 
        011-MOUNT-DATE-TIME.
            MOVE FUNCTION CURRENT-DATE   TO WS-DATA-HORA-SYS.
@@ -159,8 +159,8 @@
            INITIALIZE WV-DATA-02
            PERFORM 022-DISPLAY-DATA-02
 
-      *>     ACCEPT SC-ID
-      *>     MOVE FUNCTION NUMVAL(SC-ID) TO WV-ID 
+           ACCEPT SC-ID
+           MOVE FUNCTION NUMVAL(SC-ID) TO WV-ID 
 
            IF WS-PF1
               PERFORM 900-CLOSE-FILES
@@ -198,7 +198,7 @@
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-      *     ACCEPT SC-NAME.
+           ACCEPT SC-NAME.
 
            IF WS-PF1
               GO 110-ID.
@@ -215,14 +215,14 @@
            MOVE FUNCTION UPPER-CASE(WV-NAME)
                                        TO WV-NAME.
 
-      *     IF LK-FLAG-WEB NOT = "S"
-      *        DISPLAY SC-NAME.
+           IF LK-FLAG-WEB NOT = "S"
+              DISPLAY SC-NAME.
  
        210-DOCUMENT.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
            
-      *     ACCEPT SC-DOCUMENT.
+           ACCEPT SC-DOCUMENT.
 
            IF WS-PF1
               GO 210-NAME.
@@ -235,7 +235,7 @@
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-      *     ACCEPT SC-EMAIL.
+           ACCEPT SC-EMAIL.
 
            IF WS-PF1
               GO 210-DOCUMENT.
@@ -247,14 +247,14 @@
            MOVE FUNCTION LOWER-CASE(WV-EMAIL)
                                        TO WV-EMAIL.
 
-      *     IF LK-FLAG-WEB NOT = "S"
-      *         DISPLAY SC-EMAIL.
+           IF LK-FLAG-WEB NOT = "S"
+               DISPLAY SC-EMAIL.
 
        210-PHONE.
            IF LK-FLAG-WEB = "S"
                EXIT PARAGRAPH.
 
-      *     ACCEPT SC-PHONE.
+           ACCEPT SC-PHONE.
 
            IF WS-PF1
               GO 210-EMAIL.
@@ -268,12 +268,12 @@
                EXIT PARAGRAPH.
 
            MOVE "N"                    TO WS-CONFIRM
-      *     DISPLAY "CONFIRM DATA RECORDING? " LINE 12 COL 01
-      *     ACCEPT WS-CONFIRM AT LINE 12 COL 25.
+           DISPLAY "CONFIRM DATA RECORDING? " LINE 12 COL 01
+           ACCEPT WS-CONFIRM AT LINE 12 COL 25.
 
            MOVE FUNCTION UPPER-CASE(WS-CONFIRM)
                                        TO WS-CONFIRM
-      *     DISPLAY WS-BLANK-LINE LINE 12 COL 01
+           DISPLAY WS-BLANK-LINE LINE 12 COL 01
            IF WS-CONFIRM NOT = "S"
                INITIALIZE WV-DATA-01
                           WV-DATA-02
@@ -374,16 +374,8 @@
               END-IF
            END-IF.
 
-
        WEB-040-SEND-VARIABLES.
-      *     MOVE LK-PARAMETERS          TO WK-PARAMETERS
-      *     MOVE WV-DATA-01             TO WW-DATA-01
-      *     MOVE WV-DATA-02             TO WW-DATA-02.
-
-      *     DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE.
-           
            MOVE WV-ID                  TO WE-ID
-           
 
            MOVE SPACES                 TO WS-JSON-RETURN
            

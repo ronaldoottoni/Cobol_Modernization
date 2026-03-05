@@ -1,7 +1,7 @@
-import SGN001 from "./pages/SGN001";
+import PROG001 from "./pages/PROG001";
 
 function App() {
-  return <SGN001 />;
+  return <PROG001 />;
 }
 
 export default App;

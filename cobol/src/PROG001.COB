@@ -31,6 +31,10 @@
        01  WV-SCREEN.
            05  WV-DATA-01.
                10  WV-ID               PIC  9(009).
+               10  FILLER REDEFINES WV-ID.
+                15 WE-ID               PIC  ZZZZZZZZ9.
+               10  FILLER REDEFINES WV-ID.
+                15 WX-ID               PIC  X(009).
 
            05  WV-DATA-02.
                10  WV-NAME             PIC  X(060).
@@ -345,7 +349,6 @@
        WEB-000-PARAMETERS.
            ACCEPT WK-PARAMETERS-WEB FROM ENVIRONMENT "PARAMETERS"
            
-
            MOVE WK-PARAMETERS          TO LK-PARAMETERS.
 
        WEB-010-BEGIN.
@@ -356,12 +359,14 @@
            MOVE WW-DATA-01             TO WV-DATA-01.
            MOVE WW-DATA-02             TO WV-DATA-02.
 
+           MOVE FUNCTION NUMVAL(WW-ID) TO WV-ID.
+
        WEB-030-CALL-FUNCTIONS.
            IF WK-FUNCTION = "TESTAR-CODIGO"
               PERFORM 111-TEST-ID
            END-IF
 
-           IF WK-FUNCTION = "ACCESS"
+           IF WK-FUNCTION = "ACESSAR-REGISTRO"
               PERFORM 100-DATA-ENTRY
                  THRU 190-READ-DGNCUS
               IF WK-FLAG-FUNCTION = "N"
@@ -371,11 +376,34 @@
 
 
        WEB-040-SEND-VARIABLES.
-           MOVE LK-PARAMETERS          TO WK-PARAMETERS
-           MOVE WV-DATA-01             TO WW-DATA-01
-           MOVE WV-DATA-02             TO WW-DATA-02.
+      *     MOVE LK-PARAMETERS          TO WK-PARAMETERS
+      *     MOVE WV-DATA-01             TO WW-DATA-01
+      *     MOVE WV-DATA-02             TO WW-DATA-02.
 
-           DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE.
+      *     DISPLAY WK-PARAMETERS-WEB   UPON CONSOLE.
+           
+           MOVE WV-ID                  TO WE-ID
+           
+
+           MOVE SPACES                 TO WS-JSON-RETURN
+           
+           STRING '{'
+                  '"id":' WE-ID ','
+                  DELIMITED BY SIZE
+                  '"name":"' WV-NAME '",'
+                  DELIMITED BY "  "
+                  '"document":"' WV-DOCUMENT '",'
+                  DELIMITED BY "  "
+                  '"email":"' WV-EMAIL '",'
+                  DELIMITED BY "  "
+                  '"phone":"' WV-PHONE '"'
+                  DELIMITED BY "  "
+                  '}'
+                  DELIMITED BY SIZE
+                  INTO WS-JSON-RETURN
+           INSPECT WS-JSON-RETURN REPLACING ALL X'00' BY SPACE.
+           DISPLAY WS-JSON-RETURN UPON CONSOLE.
+
 
        WEB-090-END.
            PERFORM 900-CLOSE-FILES

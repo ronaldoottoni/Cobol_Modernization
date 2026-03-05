@@ -60,3 +60,7 @@
                10  WC-ERR-STATUS        PIC  X(002)        VALUE SPACES.
                10  WC-ERR-PARAMETRO     PIC  X(200)        VALUE SPACES.
                10  WC-ERR-MENSAGEM      PIC  X(080)        VALUE SPACES.
+      
+      *>------------------------- JSON RETURN -------------------------*
+           05  WS-JSON-RETURN          PIC  X(1000)        VALUE SPACES.
+           

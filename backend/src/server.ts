@@ -87,7 +87,7 @@ app.post("/api/exec", (req: Request, res: Response) => {
     const programName = program.toUpperCase().padEnd(10, " ");
     const sysParam = buildSysParam({
         flagWeb: "S",
-        ttyWeb: " ",
+        ttyWeb: "WEBSESSION",
         usernameWeb: "BROW",
         dateWeb: "",
         timeWeb: "",

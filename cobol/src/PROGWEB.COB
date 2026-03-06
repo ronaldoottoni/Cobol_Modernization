@@ -28,6 +28,7 @@
 
            MOVE WK-PARAMETERS(1:200)   TO LK-PARAMETERS
            CALL WK-PROGRAM USING LK-PARAMETERS
+           CANCEL WK-PROGRAM
 
            STOP RUN
            .

@@ -209,7 +209,9 @@
 
        211-TEST-NAME.
            IF WV-NAME = SPACES
-              DISPLAY "NAME IT'S MANDATORY - ERROR"
+              IF LK-FLAG-WEB NOT = "S"
+                 DISPLAY "NAME IT'S MANDATORY - ERROR"
+              END-IF
               GO 210-NAME.
 
            MOVE FUNCTION UPPER-CASE(WV-NAME)
@@ -275,17 +277,17 @@
                                        TO WS-CONFIRM
            DISPLAY WS-BLANK-LINE LINE 12 COL 01
            IF WS-CONFIRM NOT = "S"
-               INITIALIZE WV-DATA-01
-                          WV-DATA-02
-               PERFORM 021-DISPLAY-DATA-01
-               PERFORM 022-DISPLAY-DATA-02
-               GO 100-DATA-ENTRY.
+              INITIALIZE WV-DATA-01
+                         WV-DATA-02
+              PERFORM 021-DISPLAY-DATA-01
+              PERFORM 022-DISPLAY-DATA-02
+              GO 100-DATA-ENTRY.
 
        290-EXIT.
            EXIT.
       
       *----------------------------------------------------------------*
-       300-RECORD-DATA.
+       300-RECORD-SAVE.
            INITIALIZE DGNCUS-REG
            MOVE WV-ID                  TO DGNCUS-ID
            MOVE "00"                   TO DGNCUS-RT
@@ -366,9 +368,22 @@
               PERFORM 111-TEST-ID
            END-IF
 
-           IF WK-FUNCTION = "ACESSAR-REGISTRO"
+           IF WK-FUNCTION = "RECORD-ACCESS"
               PERFORM 100-DATA-ENTRY
                  THRU 190-READ-DGNCUS
+              IF WK-FLAG-FUNCTION = "N"
+                 GO WEB-090-END
+              END-IF
+           END-IF.
+
+           IF WK-FUNCTION = "RECORD-SAVE"
+              PERFORM 200-BODY-DATA-ENTRY
+                 THRU 290-EXIT
+              IF WK-FLAG-FUNCTION = "N"
+                 GO WEB-090-END
+              END-IF
+              PERFORM 300-RECORD-SAVE
+                 THRU 390-EXIT
               IF WK-FLAG-FUNCTION = "N"
                  GO WEB-090-END
               END-IF
@@ -395,7 +410,6 @@
                   INTO WS-JSON-RETURN
            INSPECT WS-JSON-RETURN REPLACING ALL X'00' BY SPACE.
            DISPLAY WS-JSON-RETURN UPON CONSOLE.
-
 
        WEB-090-END.
            PERFORM 900-CLOSE-FILES

@@ -63,4 +63,6 @@
       
       *>------------------------- JSON RETURN -------------------------*
            05  WS-JSON-RETURN          PIC  X(1000)        VALUE SPACES.
+           05  WS-JSON-OBJECT          USAGE POINTER.
+           05  WS-JSON-STRING          USAGE POINTER.
            

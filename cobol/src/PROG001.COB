@@ -31,10 +31,6 @@
        01  WV-SCREEN.
            05  WV-DATA-01.
                10  WV-ID               PIC  9(009).
-               10  FILLER REDEFINES WV-ID.
-                15 WE-ID               PIC  ZZZZZZZZ9.
-               10  FILLER REDEFINES WV-ID.
-                15 WX-ID               PIC  X(009).
 
            05  WV-DATA-02.
                10  WV-NAME             PIC  X(060).
@@ -42,16 +38,29 @@
                10  WV-EMAIL            PIC  X(150).
                10  WV-PHONE            PIC  9(009).
 
+       01  WW-JSON-RETURN.
+           05  ID-FIELD                PIC  ZZZZZZZZ9.
+           05  NAME-FIELD              PIC  X(060).
+           05  DOCUMENT-FIELD          PIC  X(025).
+           05  EMAIL-FIELD             PIC  X(150).
+           05  PHONE-FIELD             PIC  9(009).
+
       *---- WEB -------------------------------------------------------*
        COPY "COPY\PGMLINK.WEB".
          02  WW-WEB-SCREEN.
            05  WW-DATA-01.
                10  WW-ID               PIC  9(009).
+               10  FILLER REDEFINES WW-ID.
+                15 WE-ID               PIC  ZZZZZZZZ9.
+               10  FILLER REDEFINES WW-ID.
+                15 WX-ID               PIC  X(009).
            05  WW-DATA-02.
                10  WW-NAME             PIC  X(060).
                10  WW-DOCUMENT         PIC  X(025).
                10  WW-EMAIL            PIC  X(150).
                10  WW-PHONE            PIC  9(009).
+
+           
            
       *> LINKAGE SECTION COPY
        COPY "COPY\PGMLINK.LK".
@@ -91,7 +100,6 @@
 
        MAIN-PROCESS.
            IF LK-FLAG-WEB = "S"
-              
               GO WEB-000-PARAMETERS
            END-IF.
            
@@ -390,26 +398,60 @@
            END-IF.
 
        WEB-040-SEND-VARIABLES.
-           MOVE WV-ID                  TO WE-ID
+           MOVE WV-DATA-01             TO WW-DATA-01
+           MOVE WV-DATA-02             TO WW-DATA-02
 
+           MOVE WW-ID                  TO WE-ID
            MOVE SPACES                 TO WS-JSON-RETURN
            
-           STRING '{'
-                  '"id":' WE-ID ','
-                  DELIMITED BY SIZE
-                  '"name":"' WV-NAME '",'
-                  DELIMITED BY "  "
-                  '"document":"' WV-DOCUMENT '",'
-                  DELIMITED BY "  "
-                  '"email":"' WV-EMAIL '",'
-                  DELIMITED BY "  "
-                  '"phone":"' WV-PHONE '"'
-                  DELIMITED BY "  "
-                  '}'
-                  DELIMITED BY SIZE
-                  INTO WS-JSON-RETURN
-           INSPECT WS-JSON-RETURN REPLACING ALL X'00' BY SPACE.
-           DISPLAY WS-JSON-RETURN UPON CONSOLE.
+      *     STRING '{'
+      *            '"id":' WE-ID ','
+      *            DELIMITED BY SIZE
+      *            '"name":"' WW-NAME '",'
+      *            DELIMITED BY "  "
+      *            '"document":"' WW-DOCUMENT '",'
+      *            DELIMITED BY "  "
+      *            '"email":"' WW-EMAIL '",'
+      *            DELIMITED BY "  "
+      *            '"phone":"' WW-PHONE '"'
+      *            DELIMITED BY "  "
+      *            '}'
+      *            DELIMITED BY SIZE
+      *            INTO WS-JSON-RETURN
+      *     INSPECT WS-JSON-RETURN REPLACING ALL X'00' BY SPACE.
+      *     DISPLAY WS-JSON-RETURN UPON CONSOLE.
+
+           CALL "cJSON_CreateObject" RETURNING WS-JSON-OBJECT.
+
+           CALL "cJSON_AddStringToObject" USING
+                                       BY VALUE WS-JSON-OBJECT
+                                       BY REFERENCE "id"
+                                       BY REFERENCE WE-ID
+
+           CALL "cJSON_AddStringToObject" USING
+                                       BY VALUE WS-JSON-OBJECT
+                                       BY REFERENCE "name"
+                                       BY REFERENCE WW-NAME
+
+           CALL "cJSON_AddStringToObject" USING
+                                       BY VALUE WS-JSON-OBJECT
+                                       BY REFERENCE "document"
+                                       BY REFERENCE WW-DOCUMENT
+
+           CALL "cJSON_AddStringToObject" USING
+                                       BY VALUE WS-JSON-OBJECT
+                                       BY REFERENCE "email"
+                                       BY REFERENCE WW-EMAIL
+
+           CALL "cJSON_AddStringToObject" USING
+                                       BY VALUE WS-JSON-OBJECT
+                                       BY REFERENCE "phone"
+                                       BY REFERENCE WW-PHONE
+           
+           CALL "cJSON_Print" USING WS-JSON-OBJECT
+                              RETURNING WS-JSON-STRING
+
+           DISPLAY WS-JSON-STRING.
 
        WEB-090-END.
            PERFORM 900-CLOSE-FILES

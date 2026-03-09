@@ -67,11 +67,10 @@ export default function SGN001() {
     idRef.current?.focus();
   }
 
-
   return (
     <div className="form">
 
-      <h2>Customers - SGN001</h2>
+      <h2>Customers - PROG001</h2>
 
       <div className="field">
         <label>ID</label>

@@ -404,54 +404,54 @@
            MOVE WW-ID                  TO WE-ID
            MOVE SPACES                 TO WS-JSON-RETURN
            
-      *     STRING '{'
-      *            '"id":' WE-ID ','
-      *            DELIMITED BY SIZE
-      *            '"name":"' WW-NAME '",'
-      *            DELIMITED BY "  "
-      *            '"document":"' WW-DOCUMENT '",'
-      *            DELIMITED BY "  "
-      *            '"email":"' WW-EMAIL '",'
-      *            DELIMITED BY "  "
-      *            '"phone":"' WW-PHONE '"'
-      *            DELIMITED BY "  "
-      *            '}'
-      *            DELIMITED BY SIZE
-      *            INTO WS-JSON-RETURN
-      *     INSPECT WS-JSON-RETURN REPLACING ALL X'00' BY SPACE.
-      *     DISPLAY WS-JSON-RETURN UPON CONSOLE.
+            STRING '{'
+                   '"id":' WE-ID ','
+                   DELIMITED BY SIZE
+                   '"name":"' WW-NAME '",'
+                   DELIMITED BY "  "
+                   '"document":"' WW-DOCUMENT '",'
+                   DELIMITED BY "  "
+                   '"email":"' WW-EMAIL '",'
+                   DELIMITED BY "  "
+                   '"phone":"' WW-PHONE '"'
+                   DELIMITED BY "  "
+                   '}'
+                   DELIMITED BY SIZE
+                   INTO WS-JSON-RETURN
+            INSPECT WS-JSON-RETURN REPLACING ALL X'00' BY SPACE.
+            DISPLAY WS-JSON-RETURN UPON CONSOLE.
 
-           CALL "cJSON_CreateObject" RETURNING WS-JSON-OBJECT.
+      *>    CALL "cJSON_CreateObject" RETURNING WS-JSON-OBJECT.
 
-           CALL "cJSON_AddStringToObject" USING
-                                       BY VALUE WS-JSON-OBJECT
-                                       BY REFERENCE "id"
-                                       BY REFERENCE WE-ID
+      *>    CALL "cJSON_AddStringToObject" USING
+      *>                                BY VALUE WS-JSON-OBJECT
+      *>                                BY REFERENCE "id"
+      *>                                BY REFERENCE WE-ID
 
-           CALL "cJSON_AddStringToObject" USING
-                                       BY VALUE WS-JSON-OBJECT
-                                       BY REFERENCE "name"
-                                       BY REFERENCE WW-NAME
+      *>    CALL "cJSON_AddStringToObject" USING
+      *>                                BY VALUE WS-JSON-OBJECT
+      *>                                BY REFERENCE "name"
+      *>                                BY REFERENCE WW-NAME
 
-           CALL "cJSON_AddStringToObject" USING
-                                       BY VALUE WS-JSON-OBJECT
-                                       BY REFERENCE "document"
-                                       BY REFERENCE WW-DOCUMENT
+      *>    CALL "cJSON_AddStringToObject" USING
+      *>                                BY VALUE WS-JSON-OBJECT
+      *>                                BY REFERENCE "document"
+      *>                                BY REFERENCE WW-DOCUMENT
 
-           CALL "cJSON_AddStringToObject" USING
-                                       BY VALUE WS-JSON-OBJECT
-                                       BY REFERENCE "email"
-                                       BY REFERENCE WW-EMAIL
+      *>    CALL "cJSON_AddStringToObject" USING
+      *>                                BY VALUE WS-JSON-OBJECT
+      *>                                BY REFERENCE "email"
+      *>                                BY REFERENCE WW-EMAIL
 
-           CALL "cJSON_AddStringToObject" USING
-                                       BY VALUE WS-JSON-OBJECT
-                                       BY REFERENCE "phone"
-                                       BY REFERENCE WW-PHONE
-           
-           CALL "cJSON_Print" USING WS-JSON-OBJECT
-                              RETURNING WS-JSON-STRING
+      *>    CALL "cJSON_AddStringToObject" USING
+      *>                                BY VALUE WS-JSON-OBJECT
+      *>                                BY REFERENCE "phone"
+      *>                                BY REFERENCE WW-PHONE
+      *>    
+      *>    CALL "cJSON_Print" USING WS-JSON-OBJECT
+      *>                       RETURNING WS-JSON-STRING
 
-           DISPLAY WS-JSON-STRING.
+      *>    DISPLAY WS-JSON-STRING.
 
        WEB-090-END.
            PERFORM 900-CLOSE-FILES

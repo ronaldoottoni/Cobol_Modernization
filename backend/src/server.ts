@@ -70,9 +70,14 @@ function buildSysParam(params: {
 }
 
 app.post("/api/exec", (req: Request, res: Response) => {
-    const exePath = path.resolve(
+    /* const exePath = path.resolve(
         __dirname,
         "../../cobol/objects/PROGWEB.exe"
+    ); */
+
+    const exePath = path.resolve(
+        process.cwd(),
+        "cobol/objects/PROGWEB"
     );
 
     const { program, func, data } = req.body;

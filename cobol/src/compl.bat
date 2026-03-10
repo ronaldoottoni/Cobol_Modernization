@@ -1,22 +1,18 @@
 @echo off
-:: Verifica se um nome de arquivo foi fornecido
 if "%~1"=="" (
-    echo Erro: Informe o nome do arquivo.
-    echo Exemplo: cob.bat meu_programa
+    echo Error: Insert the file name.
     exit /b 1
 )
 
 set ARQUIVO=%~1
 
-:: Compilação (-x para executável, -free para formato livre)
-echo [COBOL] Compilando %ARQUIVO%.COB...
-cobc -m "%ARQUIVO%.COB"
+echo [COBOL] Compiling %ARQUIVO%.COB...
+cobc -m "%ARQUIVO%.COB" -I copy
 
-:: Se o erro for 0, executa o programa
 if %errorlevel% equ 0 (
-    echo [OK] Sucesso! Iniciando execucao...
+    echo [OK] Success!
     echo ---------------------------------------
     move /y "%ARQUIVO%.dll" "..\objects"
 ) else (
-    echo [ERRO] Falha na compilacao.
+    echo [ERROR] Compilation failure.
 )

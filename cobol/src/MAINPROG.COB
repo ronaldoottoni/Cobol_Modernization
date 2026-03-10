@@ -11,7 +11,7 @@
        77  WS-END          PIC X VALUE 'N'.
 
       *>   DEFAULT VARIABLES TO BE USED ALL PROGRAMS 
-       COPY "copy\PGMWORK.WS".
+       COPY "PGMWORK.WS".
        
        01  WS-MAINPROG-WORK-VARS.
            05 WS-TITLE    PIC X(40)
@@ -20,7 +20,7 @@
               VALUE "----------------------------------------".
 
       *>   VARIABLES TO PREPAR THE LINKAGE'S CALL
-       COPY "copy\PGMLINK.WS".
+       COPY "PGMLINK.WS".
 
        PROCEDURE DIVISION.
        MAIN-PROCESS.

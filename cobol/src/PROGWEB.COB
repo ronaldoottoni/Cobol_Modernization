@@ -8,7 +8,7 @@
        WORKING-STORAGE SECTION.
 
       *>   DEFAULT VARIABLES TO BE USED ALL PROGRAMS 
-       COPY "copy\PGMWORK.WS".
+       COPY "PGMWORK.WS".
        
        01  WS-PROGWEB-WORK-VARS.
            05  FILLER              PIC  X(001)     VALUE SPACES.
@@ -20,7 +20,7 @@
            05  WK-DATA             PIC  X(10000)   VALUE SPACES.
 
       *>   VARIABLES TO PREPAR THE LINKAGE'S CALL
-       COPY "copy\PGMLINK.WS".
+       COPY "PGMLINK.WS".
 
        PROCEDURE DIVISION.
        MAIN-PROCESS.

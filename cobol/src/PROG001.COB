@@ -10,11 +10,11 @@
 
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-       COPY "COPY\DGNCUS.SEL".
+       COPY "DGNCUS.SEL".
 
        DATA DIVISION.
        FILE SECTION.
-       COPY "COPY\DGNCUS.FD".
+       COPY "DGNCUS.FD".
 
        WORKING-STORAGE SECTION.
 
@@ -22,21 +22,21 @@
        77  WS-FIM          PIC X VALUE 'N'.
        
        *>   DEFAULT VARIABLES TO BE USED ALL PROGRAMS 
-       COPY "COPY\PGMWORK.WS".
+       COPY "PGMWORK.WS".
 
        01  WS-PROG001-WORK-VARS.
            05 WS-NEXT-ID           PIC  9(009)     VALUE ZEROS.
            05 WS-RETORNO           PIC  X(500)     VALUE SPACES.
 
-       01  WV-SCREEN.
-           05  WV-DATA-01.
-               10  WV-ID               PIC  9(009).
+       01  WS-SCREEN.
+           05  WS-DATA-01.
+               10  WS-ID               PIC  9(009).
 
-           05  WV-DATA-02.
-               10  WV-NAME             PIC  X(060).
-               10  WV-DOCUMENT         PIC  X(025).
-               10  WV-EMAIL            PIC  X(150).
-               10  WV-PHONE            PIC  9(009).
+           05  WS-DATA-02.
+               10  WS-NAME             PIC  X(060).
+               10  WS-DOCUMENT         PIC  X(025).
+               10  WS-EMAIL            PIC  X(150).
+               10  WS-PHONE            PIC  9(009).
 
        01  WW-JSON-RETURN.
            05  ID-FIELD                PIC  ZZZZZZZZ9.
@@ -46,7 +46,7 @@
            05  PHONE-FIELD             PIC  9(009).
 
       *---- WEB -------------------------------------------------------*
-       COPY "COPY\PGMLINK.WEB".
+       COPY "PGMLINK.WEB".
          02  WW-WEB-SCREEN.
            05  WW-DATA-01.
                10  WW-ID               PIC  9(009).
@@ -60,39 +60,37 @@
                10  WW-EMAIL            PIC  X(150).
                10  WW-PHONE            PIC  9(009).
 
-           
-           
       *> LINKAGE SECTION COPY
-       COPY "COPY\PGMLINK.LK".
+       COPY "PGMLINK.LK".
 
        SCREEN SECTION.
        01  SC-SCREEN-01.
-           02  LINE 05  COL 03 "ID........: ".
-           02  LINE 06  COL 01 
+           02  LINE 05  COL 03 VALUE "ID........: ".
+           02  LINE 06  COL 01 VALUE
            "..........................................................".
        01  SC-DATA-01.
            02  SC-ID   LINE 05 COL 15 PIC  9(009) USING
-               WV-ID.
+               WS-ID.
 *
        01  SC-SCREEN-02.
-           02  LINE 07  COL 03 "NAME......: ".
-           02  LINE 08  COL 03 "DOCUMENT..: ".
-           02  LINE 09  COL 03 "EMAIL.....: ".
-           02  LINE 10  COL 03 "PHONE.....: ".
+           02  LINE 07  COL 03 VALUE "NAME......: ".
+           02  LINE 08  COL 03 VALUE "DOCUMENT..: ".
+           02  LINE 09  COL 03 VALUE "EMAIL.....: ".
+           02  LINE 10  COL 03 VALUE "PHONE.....: ".
        01  SC-DATA-02.
            02  SC-NAME LINE 07  COL 15  PIC  X(060) USING
-               WV-NAME.
+               WS-NAME.
            02  SC-DOCUMENT LINE 08  COL 15  PIC  X(025) USING
-               WV-DOCUMENT.
+               WS-DOCUMENT.
            02  SC-EMAIL LINE 09 COL 15 PIC X(050) USING
-               WV-EMAIL.
+               WS-EMAIL.
            02  SC-PHONE LINE 10 COL 15 PIC 9(009) USING
-               WV-PHONE.
+               WS-PHONE.
 
        PROCEDURE DIVISION USING LK-PARAMETERS.
        DECLARATIVES.
 
-       COPY "COPY\DGNCUS.DEC".
+       COPY "DGNCUS.DEC".
 
        END DECLARATIVES.
 
@@ -103,44 +101,25 @@
               GO WEB-000-PARAMETERS
            END-IF.
            
+       000-DATE-TIME.
+           MOVE FUNCTION CURRENT-DATE   TO WS-DATA-HORA-SYS.
        010-INITIALIZE-VARS.
            INITIALIZE WS-PROG001-WORK-VARS
-                      WV-DATA-01
-                      WV-DATA-02
+                      WS-DATA-01
+                      WS-DATA-02
            .
 
        020-MOUNT-SCREEN.
            IF LK-FLAG-WEB = "S"
               EXIT PARAGRAPH.
 
-       021-DISPLAY-SCREEN-01.
-           IF LK-FLAG-WEB = "S"
-               EXIT PARAGRAPH.
-
            DISPLAY SC-SCREEN-01.
-       
-       021-DISPLAY-DATA-01.
-           IF LK-FLAG-WEB = "S"
-               EXIT PARAGRAPH.
-
            DISPLAY SC-DATA-01.
 
-       022-DISPLAY-SCREEN-02.
-           IF LK-FLAG-WEB = "S"
-               EXIT PARAGRAPH.
-
            DISPLAY SC-SCREEN-02.
-
-       022-DISPLAY-DATA-02.
-           IF LK-FLAG-WEB = "S"
-               EXIT PARAGRAPH.
-
            DISPLAY SC-DATA-02.
 
-       011-MOUNT-DATE-TIME.
-           MOVE FUNCTION CURRENT-DATE   TO WS-DATA-HORA-SYS.
-
-       040-OPEN-FILES.
+       030-OPEN-FILES.
            MOVE "DGNCUS" TO WS-DGNCUS
            
            OPEN I-O DGNCUS
@@ -154,21 +133,20 @@
               WK-FUNCTION NOT = "START"
               EXIT PARAGRAPH.
            
-           INITIALIZE WV-DATA-01
-                      WV-DATA-02
+           INITIALIZE WS-DATA-01
+                      WS-DATA-02
 
-           PERFORM 021-DISPLAY-DATA-01
-           PERFORM 022-DISPLAY-DATA-02.
+           PERFORM 020-MOUNT-SCREEN.
 
        110-ID.
            IF LK-FLAG-WEB = "S"
               EXIT PARAGRAPH.
 
-           INITIALIZE WV-DATA-02
-           PERFORM 022-DISPLAY-DATA-02
+           INITIALIZE WS-DATA-02
+           PERFORM 020-MOUNT-SCREEN
 
            ACCEPT SC-ID
-           MOVE FUNCTION NUMVAL(SC-ID) TO WV-ID 
+           MOVE FUNCTION NUMVAL(SC-ID) TO WS-ID 
 
            IF WS-PF1
               PERFORM 900-CLOSE-FILES
@@ -178,29 +156,29 @@
            PERFORM 700-NEXT-ID
               THRU 709-NEXT-ID-END
 
-           IF WV-ID = ZEROS OR
-              WV-ID > WS-NEXT-ID
-              MOVE WS-NEXT-ID          TO WV-ID
+           IF WS-ID = ZEROS OR
+              WS-ID > WS-NEXT-ID
+              MOVE WS-NEXT-ID          TO WS-ID
               IF LK-FLAG-WEB NOT = "S"
-                 PERFORM 021-DISPLAY-DATA-01.
+                 PERFORM 020-MOUNT-SCREEN.
 
        190-READ-DGNCUS.
            INITIALIZE DGNCUS-REG
-           MOVE WV-ID                  TO DGNCUS-ID
+           MOVE WS-ID                  TO DGNCUS-ID
            MOVE "00"                   TO DGNCUS-RT
            MOVE "S"                    TO WS-EXIST
            READ DGNCUS INVALID KEY
                 MOVE "N"               TO WS-EXIST
                 INITIALIZE DGNCUS-BODY.
 
-           MOVE DGNCUS-NAME            TO WV-NAME
-           MOVE DGNCUS-DOCUMENT        TO WV-DOCUMENT
-           MOVE DGNCUS-EMAIL           TO WV-EMAIL
-           MOVE DGNCUS-PHONE           TO WV-PHONE
+           MOVE DGNCUS-NAME            TO WS-NAME
+           MOVE DGNCUS-DOCUMENT        TO WS-DOCUMENT
+           MOVE DGNCUS-EMAIL           TO WS-EMAIL
+           MOVE DGNCUS-PHONE           TO WS-PHONE
            .
 
        200-BODY-DATA-ENTRY.
-           PERFORM 022-DISPLAY-DATA-02.
+           PERFORM 020-MOUNT-SCREEN.
 
        210-NAME.
            IF LK-FLAG-WEB = "S"
@@ -216,14 +194,14 @@
               GO 100-DATA-ENTRY.
 
        211-TEST-NAME.
-           IF WV-NAME = SPACES
+           IF WS-NAME = SPACES
               IF LK-FLAG-WEB NOT = "S"
                  DISPLAY "NAME IT'S MANDATORY - ERROR"
               END-IF
               GO 210-NAME.
 
-           MOVE FUNCTION UPPER-CASE(WV-NAME)
-                                       TO WV-NAME.
+           MOVE FUNCTION UPPER-CASE(WS-NAME)
+                                       TO WS-NAME.
 
            IF LK-FLAG-WEB NOT = "S"
               DISPLAY SC-NAME.
@@ -238,7 +216,7 @@
               GO 210-NAME.
 
        211-TEST-DOCUMENT.
-           IF WV-DOCUMENT = SPACES
+           IF WS-DOCUMENT = SPACES
               EXIT PARAGRAPH.
 
        210-EMAIL.
@@ -251,11 +229,11 @@
               GO 210-DOCUMENT.
 
        211-TEST-EMAIL.
-           IF WV-EMAIL = SPACES
+           IF WS-EMAIL = SPACES
                EXIT PARAGRAPH.
 
-           MOVE FUNCTION LOWER-CASE(WV-EMAIL)
-                                       TO WV-EMAIL.
+           MOVE FUNCTION LOWER-CASE(WS-EMAIL)
+                                       TO WS-EMAIL.
 
            IF LK-FLAG-WEB NOT = "S"
                DISPLAY SC-EMAIL.
@@ -270,7 +248,7 @@
               GO 210-EMAIL.
 
        211-TEST-PHONE.
-           IF WV-PHONE = ZEROS
+           IF WS-PHONE = ZEROS
               EXIT PARAGRAPH.
 
        290-CONFIRM.
@@ -285,10 +263,9 @@
                                        TO WS-CONFIRM
            DISPLAY WS-BLANK-LINE LINE 12 COL 01
            IF WS-CONFIRM NOT = "S"
-              INITIALIZE WV-DATA-01
-                         WV-DATA-02
-              PERFORM 021-DISPLAY-DATA-01
-              PERFORM 022-DISPLAY-DATA-02
+              INITIALIZE WS-DATA-01
+                         WS-DATA-02
+              PERFORM 020-MOUNT-SCREEN
               GO 100-DATA-ENTRY.
 
        290-EXIT.
@@ -297,15 +274,15 @@
       *----------------------------------------------------------------*
        300-RECORD-SAVE.
            INITIALIZE DGNCUS-REG
-           MOVE WV-ID                  TO DGNCUS-ID
+           MOVE WS-ID                  TO DGNCUS-ID
            MOVE "00"                   TO DGNCUS-RT
            READ DGNCUS INVALID KEY
                INITIALIZE DGNCUS-BODY.
 
-           MOVE WV-NAME                TO DGNCUS-NAME
-           MOVE WV-DOCUMENT            TO DGNCUS-DOCUMENT
-           MOVE WV-EMAIL               TO DGNCUS-EMAIL
-           MOVE WV-PHONE               TO DGNCUS-PHONE
+           MOVE WS-NAME                TO DGNCUS-NAME
+           MOVE WS-DOCUMENT            TO DGNCUS-DOCUMENT
+           MOVE WS-EMAIL               TO DGNCUS-EMAIL
+           MOVE WS-PHONE               TO DGNCUS-PHONE
 
            WRITE DGNCUS-REG INVALID KEY
                  REWRITE DGNCUS-REG.
@@ -366,10 +343,10 @@
               THRU 090-EXIT.
 
        WEB-020-SET-VARIABLES.
-           MOVE WW-DATA-01             TO WV-DATA-01.
-           MOVE WW-DATA-02             TO WV-DATA-02.
+           MOVE WW-DATA-01             TO WS-DATA-01.
+           MOVE WW-DATA-02             TO WS-DATA-02.
 
-           MOVE FUNCTION NUMVAL(WW-ID) TO WV-ID.
+           MOVE FUNCTION NUMVAL(WW-ID) TO WS-ID.
 
        WEB-030-CALL-FUNCTIONS.
            IF WK-FUNCTION = "TESTAR-CODIGO"
@@ -398,8 +375,8 @@
            END-IF.
 
        WEB-040-SEND-VARIABLES.
-           MOVE WV-DATA-01             TO WW-DATA-01
-           MOVE WV-DATA-02             TO WW-DATA-02
+           MOVE WS-DATA-01             TO WW-DATA-01
+           MOVE WS-DATA-02             TO WW-DATA-02
 
            MOVE WW-ID                  TO WE-ID
            MOVE SPACES                 TO WS-JSON-RETURN

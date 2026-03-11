@@ -77,7 +77,7 @@ app.post("/api/exec", (req: Request, res: Response) => {
 
     const exePath = path.resolve(
         process.cwd(),
-        "cobol/objects/PROGWEB"
+        "/app/cobol/objects/PROGWEB"
     );
 
     const { program, func, data } = req.body;
@@ -107,7 +107,7 @@ app.post("/api/exec", (req: Request, res: Response) => {
     execFile(
         exePath, [], {
         maxBuffer: 1024 * 1024 * 10,
-        cwd: path.resolve(__dirname, "../../cobol/objects"),
+        cwd: path.resolve(__dirname, "/app/cobol/objects"),
         env: {
             ...process.env,
             PARAMETERS: finalParameters,

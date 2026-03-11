@@ -2,6 +2,10 @@
 
 mkdir -p objects
 
+pwd 
+
+ls -l
+
 cobc -x src/PROGWEB.COB \
 -I ./src/copy \
 -o ./objects/PROGWEB

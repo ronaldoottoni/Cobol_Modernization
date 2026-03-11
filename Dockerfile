@@ -28,8 +28,14 @@ EXPOSE 3000
 
 CMD ["npm","run","dev"]
 
+# Construir a imagem
 # docker build -t cobol-modern .
+
+# Start do container
 # docker run -p 3000:3000 --name cobol-api cobol-modern
 
 # Entrar no container
 # docker exec -it cobol-modern /bin/bash
+
+# Stop do container
+# docker stop cobol-api

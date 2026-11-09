@@ -1,207 +1,146 @@
 # COBOL Web Modernization Demo
 
-![COBOL](https://img.shields.io/badge/COBOL-Business%20Logic-004B87?style=for-the-badge)
-![COBOL Modernization](https://img.shields.io/badge/COBOL-Modernization-orange?style=for-the-badge)
-![COBOL Not Legacy](https://img.shields.io/badge/COBOL-%E2%89%A0%20Legacy-red?style=for-the-badge)
-
-![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![Vite](https://img.shields.io/badge/Vite-Build%20Tool-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![COBOL](https://img.shields.io/badge/COBOL-GnuCOBOL-004B87?style=for-the-badge)
+![Node.js](https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-Vite-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
----
+**Modernizing COBOL does not have to mean rewriting it.**
 
-This repository continues the discussion about **COBOL modernization**.
+This project keeps the business logic in COBOL and exposes it through a REST API and a React web interface. The **same compiled COBOL program** runs in two modes:
 
-Modernizing COBOL systems does **not necessarily mean replacing COBOL**.
+- **Web mode:** React → Node.js API → COBOL, with the COBOL program returning JSON
+- **Character mode:** the classic terminal menu, with no web layer at all
 
-In many cases, the best approach is to **preserve existing business logic and integrate it with modern technologies**.
-
-This project demonstrates that approach by exposing COBOL programs through a modern web architecture while keeping the COBOL logic intact.
-
-The stack integrates:
-
-* COBOL business logic executed with GnuCOBOL
-* A REST API built with Node.js
-* A modern React interface
-* Containerized deployment using Docker
+It reflects a pattern I have used for years in production: integrating COBOL systems on Linux with modern technologies (PHP, Python, REST/SOAP APIs) instead of replacing them.
 
 ---
 
-This project demonstrates a **COBOL application modernization approach** using a modern web architecture running inside Docker containers.
+## Architecture
 
-The system executes COBOL programs compiled for Linux and exposes them in two ways:
+```
+┌──────────────┐   POST /api/exec    ┌──────────────────────┐   env PARAMETERS   ┌────────────────────┐
+│ React + Vite │ ──────────────────► │ Node.js + Express    │ ─────────────────► │ PROGWEB (COBOL)    │
+│ (frontend)   │ ◄────────────────── │ builds the 200-byte  │ ◄───── stdout ──── │ dispatcher         │
+└──────────────┘        JSON         │ linkage area         │       (JSON)       └─────────┬──────────┘
+                                     └──────────────────────┘                              │ dynamic CALL
+                                                                                           ▼
+┌──────────────┐                                                                 ┌────────────────────┐
+│ Terminal     │ ──────────────── MAINPROG (COBOL menu) ───────── CALL ────────► │ PROG001 (COBOL)    │
+│ (char mode)  │                                                                 │ customer CRUD on   │
+└──────────────┘                                                                 │ indexed file       │
+                                                                                 └────────────────────┘
+```
 
-* **Web Mode** – through a REST API consumed by a React frontend
-* **Character Mode** – direct execution through the container terminal
+### How a web request reaches COBOL
 
-The purpose is to show how legacy COBOL applications can be **integrated with modern technologies without rewriting the business logic**.
+1. The React screen builds a **fixed-width record** (ID 9, name 60, document 25, e-mail 150, phone 9), exactly like a COBOL screen layout.
+2. The Node.js API validates the request and builds the **200-byte parameter area** that mirrors the COBOL copybook `PGMLINK.WEB` (web flag, TTY, user, date, time, function…).
+3. The API runs `PROGWEB` and passes `program name + parameters + data` in the `PARAMETERS` environment variable.
+4. `PROGWEB` reads the variable and **dynamically calls** the requested program (`CALL WK-PROGRAM`), so new programs can be exposed without changing the dispatcher.
+5. `PROG001` checks the web flag, executes the requested function and writes **JSON to stdout**, which the API parses and returns.
+
+In character mode, `MAINPROG` calls the same `PROG001` with the web flag off, and the program uses its terminal screens instead.
 
 ---
 
-# Architecture
+## Repository structure
 
 ```
-Browser
-   ↓
-Frontend (React + Vite)
-   ↓
-Backend API (Node.js + Express)
-   ↓
-COBOL Executables (GnuCOBOL)
-```
-
-All components run inside **Docker containers**.
-
----
-
-# Technologies Used
-
-## Backend
-
-* Node.js
-* Express
-* TypeScript
-
-## Frontend
-
-* React
-* Vite
-* TypeScript
-
-## COBOL
-
-* GnuCOBOL
-* Linux COBOL executables
-
-## Infrastructure
-
-* Docker
-* Docker Compose
-
----
-
-# Project Structure
-
-```
-project
-│
-├─ backend
-│   API responsible for executing COBOL programs
-│
-├─ frontend
-│   React web interface
-│
-├─ cobol
-│   ├─ objects
-│   │   compiled COBOL executables
-│   │
-│   └─ data
-│       data files used by COBOL programs
-│
-└─ docker-compose.yml
-```
-
-**COBOL source code is not included in this repository**, only compiled executables.
-
----
-
-# Running the Project
-
-## Requirements
-
-* Docker
-* Docker Compose
-
-From the project root directory run:
-
-```
-docker compose up --build
-```
-
-After startup the services will be available at:
-
-Frontend
-
-```
-http://localhost:5173
-```
-
-Backend API
-
-```
-http://localhost:3000
+.
+├── Dockerfile            # Node 20 + GnuCOBOL image: compiles COBOL and runs the API
+├── backend/
+│   └── src/server.ts     # Express API: POST /api/exec → COBOL
+├── cobol/
+│   ├── build.sh          # compiles all programs with cobc
+│   ├── src/
+│   │   ├── PROGWEB.COB   # web entry point / dispatcher
+│   │   ├── MAINPROG.COB  # terminal menu (character mode)
+│   │   ├── PROG001.COB   # customer registration: read and save, JSON output
+│   │   └── copy/         # copybooks: file layout (DGNCUS), linkage areas, shared work vars
+│   └── objects/          # compiled output (generated by build.sh)
+└── frontend/
+    └── src/
+        ├── api/cobolApi.ts
+        └── pages/PROG001.tsx   # customer screen
 ```
 
 ---
 
-# Testing the COBOL API
+## Running
 
-Endpoint:
+### 1. Backend + COBOL (Docker)
 
-```
-POST /api/exec
-```
-
-Example request:
-
-```
-POST http://localhost:3000/api/exec
+```bash
+docker build -t cobol-modern .
+docker run -d -p 3000:3000 --name cobol-api cobol-modern
 ```
 
-Request body example:
+The image installs GnuCOBOL, compiles the programs with `cobol/build.sh` and starts the API on `http://localhost:3000`.
 
-```json
-{
-  "program": "PROG001",
-  "func": "RECORD-ACCESS",
-  "data": "1"
-}
+### 2. Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-The backend will execute the COBOL program and return the response as JSON.
+Open `http://localhost:5173`.
 
----
+### 3. Character mode (terminal)
 
-# Running COBOL in Character Mode
-
-The COBOL programs can also be executed directly inside the backend container.
-
-Access the backend container:
-
-```
+```bash
 docker exec -it cobol-api /bin/bash
-```
-
-Navigate to the COBOL executable directory:
-
-```
 cd /app/cobol/objects
-```
-
-Run a program:
-
-```
 ./MAINPROG
 ```
 
-This allows the application to run in the **traditional terminal mode**, without using the API.
+---
+
+## API
+
+`POST /api/exec`
+
+| Field | Description |
+|---|---|
+| `program` | COBOL program to call (e.g. `PROG001`) |
+| `func` | Function inside the program: `RECORD-ACCESS` or `RECORD-SAVE` |
+| `data` | Fixed-width record expected by the program |
+
+Read a customer:
+
+```bash
+curl -X POST http://localhost:3000/api/exec \
+  -H "Content-Type: application/json" \
+  -d '{"program": "PROG001", "func": "RECORD-ACCESS", "data": "000000001"}'
+```
+
+The response is the JSON produced by the COBOL program itself. Errors (missing fields, execution failure, invalid output) are returned as JSON with HTTP 400 or 500.
 
 ---
 
-# Project Purpose
+## Tech stack
 
-This project illustrates a typical **legacy system modernization strategy**:
+| Layer | Technology |
+|---|---|
+| Business logic | COBOL (GnuCOBOL), indexed files |
+| API | Node.js, Express 5, TypeScript |
+| UI | React, Vite, TypeScript |
+| Infrastructure | Docker |
 
-* preserving existing COBOL business logic
-* exposing functionality through a REST API
-* providing a modern web interface
-* using containers for portability and reproducibility
+## Next steps
 
-This approach allows organizations to **evolve COBOL systems incrementally** instead of performing a full rewrite.
+- [ ] `docker-compose.yml` to start backend and frontend with one command
+- [ ] More programs exposed through the same dispatcher
+- [ ] Automated tests for the API ↔ COBOL contract
 
----
+## Author
 
-# License
+**Ronaldo Ottoni**, software developer with 20+ years of experience in COBOL on Linux, API integrations (REST/SOAP) and legacy modernization.
+[GitHub](https://github.com/ronaldoottoni)
 
-This project was created for educational and demonstration purposes.
+## License
+
+GPL-3.0. See [LICENSE](LICENSE).
